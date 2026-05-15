@@ -1,0 +1,74 @@
+[
+    {
+        "room_id": "izba-1",
+        "check_in": "2026-05-20",
+        "check_out": "2026-05-25",
+        "guest_name": "Ján Novák",
+        "guest_email": "jan@example.com",
+        "guest_phone": "+421900111222",
+        "guests_count": 2,
+        "total_price": 180.0,
+        "status": "confirmed",
+        "notes": ""
+    },
+    {
+        "room_id": "izba-1",
+        "check_in": "2026-06-01",
+        "check_out": "2026-06-05",
+        "guest_name": "Anna Kováčová",
+        "guest_email": "anna@example.com",
+        "guest_phone": "+421900333444",
+        "guests_count": 3,
+        "total_price": 240.0,
+        "status": "confirmed",
+        "notes": ""
+    },
+    {
+        "room_id": "izba-2",
+        "check_in": "2026-05-18",
+        "check_out": "2026-05-22",
+        "guest_name": "Peter Horváth",
+        "guest_email": "peter@example.com",
+        "guest_phone": "+421900555666",
+        "guests_count": 2,
+        "total_price": 144.0,
+        "status": "confirmed",
+        "notes": ""
+    },
+    {
+        "room_id": "izba-3",
+        "check_in": "2026-06-10",
+        "check_out": "2026-06-15",
+        "guest_name": "Mária Tóthová",
+        "guest_email": "maria@example.com",
+        "guest_phone": "+421900777888",
+        "guests_count": 4,
+        "total_price": 400.0,
+        "status": "confirmed",
+        "notes": ""
+    },
+    {
+        "room_id": "izba-1",
+        "check_in": "2026-07-01",
+        "check_out": "2026-07-07",
+        "guest_name": "Tomáš Szabó",
+        "guest_email": "tomas@example.com",
+        "guest_phone": "+421900999000",
+        "guests_count": 2,
+        "total_price": 240.0,
+        "status": "confirmed",
+        "notes": "Letná dovolenka"
+    },
+    {
+        "room_id": "izba-2",
+        "check_in": "2026-06-20",
+        "check_out": "2026-06-28",
+        "guest_name": "Eva Molnárová",
+        "guest_email": "eva@example.com",
+        "guest_phone": "+421901111222",
+        "guests_count": 2,
+        "total_price": 320.0,
+        "status": "confirmed",
+        "notes": ""
+    }
+]
