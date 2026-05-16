@@ -8,9 +8,6 @@ import { CheckCircle2, Loader2, AlertCircle, Calendar, Download } from "lucide-r
 import { useLanguage } from "@/i18n/LanguageContext";
 import rooms from "@/data/rooms";
 import { roomTranslations } from "@/i18n/translations";
-import { createClient } from "@metagptx/web-sdk";
-
-const client = createClient();
 
 interface BookingRequestFormProps {
   preselectedRoomId?: string;
@@ -60,7 +57,7 @@ function buildIcsDownloadUrl(
     message: message || "",
   });
 
-  return `/api/v1/ical/download?${params.toString()}`;
+  return `/api/ical?${params.toString()}`;
 }
 
 const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
@@ -99,10 +96,10 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
     const roomLabel = formData.room ? getRoomLabel(formData.room) : "—";
 
     try {
-      const response = await client.apiCall.invoke({
-        url: "/api/v1/booking/send-confirmation",
+      const response = await fetch("/api/booking", {
         method: "POST",
-        data: {
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
@@ -111,19 +108,21 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
           check_out: formData.checkOut,
           guests: formData.guests,
           message: formData.message,
-        },
+        }),
       });
 
-      if (response.data?.success) {
+      const result = await response.json();
+
+      if (result.success) {
         setSubmittedData({ ...formData });
         setSubmittedRoomLabel(roomLabel);
         setSuccess(true);
       } else {
-        setError(t("bookingRequest.errorGeneric") || "Failed to send booking request. Please try again.");
+        setError(result.message || t("bookingRequest.errorGeneric") || "Failed to send booking request. Please try again.");
       }
-    } catch (err: any) {
-      const detail = err?.data?.detail || err?.response?.data?.detail || err?.message || "";
-      setError(detail || t("bookingRequest.errorGeneric") || "Failed to send booking request. Please try again.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "";
+      setError(message || t("bookingRequest.errorGeneric") || "Failed to send booking request. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -143,13 +142,8 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
     );
 
     try {
-      const response = await client.apiCall.invoke({
-        url,
-        method: "GET",
-        responseType: "text",
-      });
-
-      const icsContent = typeof response.data === "string" ? response.data : JSON.stringify(response.data);
+      const response = await fetch(url);
+      const icsContent = await response.text();
       const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
       const downloadUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -160,7 +154,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
       document.body.removeChild(a);
       URL.revokeObjectURL(downloadUrl);
     } catch {
-      // Fallback: open the URL directly
       window.open(url, "_blank");
     }
   };
@@ -182,7 +175,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
         </h3>
         <p className="text-[#8A9BA8]">{t("bookingRequest.successDesc")}</p>
 
-        {/* Add to Calendar section */}
         <div className="mt-6 rounded-lg border border-green-100 bg-white p-5">
           <p className="mb-4 text-sm font-medium text-[#1B3A4B]">
             {t("bookingRequest.calendarDesc")}
@@ -232,7 +224,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
     );
   }
 
-  // Today's date for min attribute
   const today = new Date().toISOString().split("T")[0];
 
   return (
@@ -249,7 +240,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Name & Email */}
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="br-name" className="text-sm font-medium text-[#1B3A4B]">
@@ -282,7 +272,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
           </div>
         </div>
 
-        {/* Phone & Room */}
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="br-phone" className="text-sm font-medium text-[#1B3A4B]">
@@ -325,7 +314,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
           </div>
         </div>
 
-        {/* Check-in & Check-out */}
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="br-checkin" className="text-sm font-medium text-[#1B3A4B]">
@@ -359,7 +347,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
           </div>
         </div>
 
-        {/* Guest count */}
         <div className="space-y-2">
           <Label className="text-sm font-medium text-[#1B3A4B]">
             {t("bookingRequest.guests")} *
@@ -381,7 +368,6 @@ const BookingRequestForm = ({ preselectedRoomId }: BookingRequestFormProps) => {
           </Select>
         </div>
 
-        {/* Message */}
         <div className="space-y-2">
           <Label htmlFor="br-message" className="text-sm font-medium text-[#1B3A4B]">
             {t("bookingRequest.message")}
