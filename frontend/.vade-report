@@ -1,30 +1,79 @@
-Implemented Vercel Web Analytics for the project
+# Vercel Speed Insights Installation Report
 
-Changes made:
-1. Installed @vercel/analytics package (version 2.0.1)
-   - Added as a dependency in package.json
-   - Updated pnpm-lock.yaml with the new package and its dependencies
+## Summary
+Successfully installed and configured Vercel Speed Insights for the Fridrich Apartman frontend project.
 
-2. Configured Analytics component in App.tsx
-   - Imported { Analytics } from '@vercel/analytics/react'
-   - Added <Analytics /> component to the application render tree
-   - Placed inside the TooltipProvider for proper context integration
+## Changes Made
 
-Implementation details:
-- Framework: React + Vite
-- Package Manager: pnpm
-- Analytics Component: Follows official Vercel documentation for React/Vite applications
-- The Analytics component is placed at the root level within the app providers to track all page views and interactions
+### 1. Package Installation
+- **File**: `package.json`
+- **Change**: Added `@vercel/speed-insights` version `^2.0.0` to dependencies
+- **Package Manager**: pnpm (as specified in package.json)
 
-Verification:
-✓ Linting passed without errors (pnpm lint)
-✓ Build completed successfully (pnpm build)
-✓ All dependencies installed and lockfile updated
-✓ No breaking changes to existing functionality
+### 2. Speed Insights Integration
+- **File**: `src/App.tsx`
+- **Changes**:
+  - Imported `SpeedInsights` component from `@vercel/speed-insights/react`
+  - Added `<SpeedInsights />` component to the App component, positioned alongside the existing `<Analytics />` component
 
-Next steps for the user:
-1. Deploy the application to Vercel
-2. Enable Web Analytics in the Vercel dashboard (Project Settings → Analytics)
-3. After deployment, verify tracking by checking browser Network tab for /_vercel/insights/* requests
+### 3. Lock File Update
+- **File**: `pnpm-lock.yaml`
+- **Change**: Updated with new dependency resolution for @vercel/speed-insights and its peer dependencies
 
-The Analytics component will automatically start collecting data once the application is deployed to Vercel with Analytics enabled in the dashboard.
+## Implementation Details
+
+### Framework Detection
+- **Project Type**: Vite + React (React 18.3.1)
+- **Package Manager**: pnpm@8.10.0
+- **Documentation Source**: https://vercel.com/docs/speed-insights/quickstart
+
+### Integration Approach
+Following the official Vercel documentation for React applications, the SpeedInsights component was:
+1. Imported from the React-specific entry point (`@vercel/speed-insights/react`)
+2. Placed in the root App component to ensure it runs on all pages
+3. Positioned alongside the existing Analytics component for consistency
+
+### Code Structure Preservation
+- Maintained existing code structure and formatting
+- Preserved all existing imports and dependencies
+- Added Speed Insights component in a logical location (next to Analytics component)
+- No breaking changes to existing functionality
+
+## Verification Steps Completed
+
+✅ **Build Verification**: Build completed successfully without errors
+- Command: `pnpm run build`
+- Result: Built successfully in 4.30s with optimized chunks
+
+✅ **Linting**: No linting errors introduced
+- Command: `pnpm run lint`
+- Result: Clean exit with no errors
+
+✅ **Dependencies**: Lock file properly updated
+- pnpm-lock.yaml reflects the new @vercel/speed-insights@2.0.0 dependency
+
+## Next Steps for User
+
+1. **Enable Speed Insights on Vercel Dashboard**:
+   - Navigate to your Vercel project dashboard
+   - Select "Speed Insights" from the sidebar
+   - Click "Enable" for this project
+
+2. **Deploy to Vercel**:
+   - Push these changes to your Git repository
+   - Vercel will automatically deploy the updated application
+   - Speed Insights will start collecting data after deployment
+
+3. **View Performance Data**:
+   - After deployment and user visits, access Speed Insights in your Vercel dashboard
+   - Monitor real-world performance metrics including:
+     - Core Web Vitals (LCP, FID, CLS)
+     - Time to First Byte (TTFB)
+     - First Contentful Paint (FCP)
+
+## Additional Notes
+
+- The Speed Insights component is lightweight and designed for production use
+- It automatically collects Web Vitals data from real user sessions
+- Works seamlessly alongside the existing @vercel/analytics integration
+- No additional configuration required - works out of the box after deployment
